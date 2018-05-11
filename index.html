@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Elctrocars</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+	<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js" crossorigin="anonymous"></script>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+	<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.6.1/Sortable.min.js" crossorigin="anonymous"></script>
+
+	<script src='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
+	<link href='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
+
+	<link rel="stylesheet" type="text/css" href="./css/styles.css">
+	<link rel="stylesheet" type="text/css" href="./css/module.css">
+	
+	<script src="./js/libs/cookie.js"></script>
+</head>
+<body>
+	<style>
+		div#map {
+			background-color: seagreen;
+			height: 100vh;
+			width: 100%;
+		}
+		div
+	</style>
+	<div id='map'></div>
+	<script>
+		/*jshint esversion: 6 */
+		mapboxgl.accessToken = 'pk.eyJ1Ijoic2NhbGVmbGFrZSIsImEiOiJjamgxeW9mbHMwMjBsMndxbTUxN3J5bTc0In0.95PiUhkeXL5MqJH7Kr1WVw';
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/light-v9',
+			zoom: 5
+		});
+
+		var lat, lng;
+
+		if ("geolocation" in navigator) {
+			console.warn('Geolocation supported');
+		  	let watcher = navigator.geolocation.watchPosition(function(position) {
+		  		lat = position.coords.latitude;
+		  		lng = position.coords.longitude;
+				console.log(lat, lng);
+			});
+		} else {
+			console.error('Geolocation not supported');
+		}
+	</script>
+
+	<div id="menus">
+		<style>
+			div.menu {
+				color: black;
+				top: 0px;
+				left: 0px;
+				position: fixed;
+				width: 100%;
+				height: 100vh;
+				max-width: 500px;
+				z-index: 2;
+				margin-left: -100%;
+				padding: 10px;
+				padding-top: 50px;
+				transition: 0.3s;
+				overflow: hidden;
+			}
+			.acrylic::before {
+				content: "";
+				position: absolute;
+				left: -10px;
+				top: -10px;
+				right: -10px;
+				bottom: -10px;
+				z-index: -1;
+				filter: blur(10px);
+				width: calc(100% + 20px);
+				height: calc(100% + 20px);
+			}
+
+			.acrylic::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				z-index: -1;
+				opacity: 0.75;
+				background: rgb(250, 250, 250);
+				border-right: 1px solid #fff;
+				background-image: url(http://api.thumbr.it/whitenoise-500x500.png?background=ffffff00&noise=a0a0a0&density=35&opacity=10);
+			}
+			.shadow {
+				border-radius: 1px;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.2);
+			}
+		</style>
+		<div class="menu acrylic shadow" id="settings-menu">
+			Settings
+			<br>
+			soon
+		</div>
+		<div class="menu acrylic shadow" id="share-menu">
+			<span style="margin-bottom: 20px; font-size: 20px;">Share charger</span>
+			<div class="form-group">
+				<label>Your ethereum address: </label>
+				<div id="ethaddress" style = "font-size: 16px; overflow: hidden;">0x0000000000000000000000000000000000000000</div>
+			</div>
+			<div class="form-group">
+				<label>Sensor ID: </label>
+				<input id="sensorid" class = "form-control" type = "text" placeholder = "0 - 6">
+			</div>
+			<div class="form-group">
+				<label>Sensor subnetwork: </label>
+				<div id="subnetwork" style = "font-size: 16px;">-</div>
+			</div>
+			<div class="form-group">
+				<label>Sensors count in alpha subnetwork: </label>
+				<div id="subnetworkcount" style = "font-size: 16px;">-</div>
+			</div>
+			<button id="done" class="btn btn-success">Done</button>
+		</div>
+		<div class="menu acrylic shadow" id="filter-menu">
+			Filter
+			<br>
+			soon
+		</div>
+		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="display: none">
+			<defs>
+				<filter id="blur">
+					<feGaussianBlur stdDeviation="8"/>
+				</filter>
+			</defs>
+		</svg>
+		<script>
+			
+		</script>
+	</div>
+
+	<style>
+		header {
+			position: fixed;
+			top: 0px;
+			left: 5px;
+			z-index: 3;
+		}
+		header div {
+			color: black;
+			display: inline-block;
+			background-color: white;
+			box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+			border-radius: 10000px;
+			margin: 5px 5px;
+			transition: 0.3s;
+			cursor: pointer;
+		}
+		header div:hover {
+			background-color: deepskyblue;
+		}
+		header div span {
+			height: 36px;
+			padding: 10px;
+		}
+		header div img {
+			width: 36px;
+			height: 36px;
+			padding: 3px;
+		}
+	</style>
+	<header>
+		<div id="settings-btn">
+			<img src="./assets/settings.svg">
+		</div><!--
+	 --><div id="share-btn">
+	 		<span>Share charger</span>
+	 	</div><!--
+	 --><div id="filter-btn">
+	 		<span>Filter</span>
+		</div>
+	</header>
+	<script>
+		var settingsMenu = false;
+		var shareMenu = false;
+		var filterMenu = false;
+		$('#settings-btn').on('click', function() {
+			if (settingsMenu) {
+				$('#settings-menu').css('margin-left', '-100%');
+			} else {
+				$('#share-menu').css('margin-left', '-100%');
+				$('#filter-menu').css('margin-left', '-100%');
+				$('#settings-menu').css('margin-left', '0%');
+				
+				shareMenu = false;
+				filterMenu = false;
+			}
+			settingsMenu = !settingsMenu;
+		});
+		$('#share-btn').on('click', function() {
+			if (shareMenu) {
+				$('#share-menu').css('margin-left', '-100%');
+			} else {
+				$('#settings-menu').css('margin-left', '-100%');
+				$('#filter-menu').css('margin-left', '-100%');
+				$('#share-menu').css('margin-left', '0%');
+				
+				settingsMenu = false;
+				filterMenu = false;
+			}
+			shareMenu = !shareMenu;
+		});
+		$('#filter-btn').on('click', function() {
+			if (filterMenu) {
+				$('#filter-menu').css('margin-left', '-100%');
+			} else {
+				$('#settings-menu').css('margin-left', '-100%');
+				$('#share-menu').css('margin-left', '-100%');
+				$('#filter-menu').css('margin-left', '0%');	
+				settingsMenu = false;
+				shareMenu = false;
+			}
+			filterMenu = !filterMenu;
+		});
+	</script>
+
+	<style>
+		div#my-location {
+			position: fixed;
+			top: 0px;
+			right: 0px;
+			color: black;
+			display: block;
+			background-color: white;
+			box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+			border-radius: 10000px;
+			margin: 5px 5px;
+			transition: 0.3s;
+			cursor: pointer;
+			z-index: 3;
+		}
+		div#my-location:hover {
+			background-color: deepskyblue;
+		}
+		div#my-location img {
+			width: 36px;
+			height: 36px;
+			padding: 3px;
+		}
+	</style>
+	<div id="my-location">
+		<img src="./assets/placeholder.svg">
+	</div>
+	<script>
+		$('#my-location').on('click', function() {
+			// map.setZoom(10);
+			map.flyTo({
+				center: [ lng, lat ],
+				zoom: 11
+			});
+		});
+	</script>
+</body>
+<script>
+	if (typeof(web3) == 'undefined') {
+		console.error('Web3 not detected!');
+		;
+	} else {
+		console.warn('Web3 detected!');
+		;
+	}
+</script>
+</html>
