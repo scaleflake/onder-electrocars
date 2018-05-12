@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Elctrocars</title>
+	<title>Electrocars</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
@@ -23,8 +23,6 @@
 	<link href='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
 
 	<link rel="stylesheet" type="text/css" href="./css/styles.css">
-	<link rel="stylesheet" type="text/css" href="./css/module.css">
-	
 	<script src="./js/libs/cookie.js"></script>
 </head>
 <body>
@@ -45,6 +43,13 @@
 			style: 'mapbox://styles/mapbox/light-v9',
 			zoom: 5
 		});
+		map.addControl(new mapboxgl.NavigationControl());
+		map.addControl(new mapboxgl.GeolocateControl({
+		    positionOptions: {
+		        enableHighAccuracy: true
+		    },
+		    trackUserLocation: true
+		}));
 
 		var lat, lng;
 
@@ -72,6 +77,7 @@
 				max-width: 500px;
 				z-index: 2;
 				margin-left: -100%;
+				opacity: 0;
 				padding: 10px;
 				padding-top: 50px;
 				transition: 0.3s;
@@ -143,55 +149,75 @@
 	</div>
 
 	<style>
-		header {
+		nav {
 			position: fixed;
 			top: 0px;
-			left: 5px;
+			left: 0px;
+			width: 100%;
+			max-width: 500px;
 			z-index: 3;
 		}
-		header div {
+		nav div.nav-wrapper {
+			margin: 5px;
+			width: 100%;
+		}
+		nav div.nav-item-wrapper {
+			width: calc(100% / 3);
+			display: inline-block;
+		}
+		nav div.nav-item {
+			margin: 0 auto;
 			color: black;
 			display: inline-block;
 			background-color: white;
 			box-shadow: 0 2px 10px rgba(0,0,0,0.5);
 			border-radius: 10000px;
-			margin: 5px 5px;
 			transition: 0.3s;
 			cursor: pointer;
 		}
-		header div:hover {
+		nav div.nav-iten:hover {
 			background-color: deepskyblue;
 		}
-		header div span {
-			height: 36px;
+		nav span {
+			text-align: center;
 			padding: 10px;
 		}
-		header div img {
+		nav img {
 			width: 36px;
 			height: 36px;
 			padding: 3px;
 		}
 	</style>
-	<header>
-		<div id="settings-btn">
-			<img src="./assets/settings.svg">
-		</div><!--
-	 --><div id="share-btn">
-	 		<span>Share charger</span>
-	 	</div><!--
-	 --><div id="filter-btn">
-	 		<span>Filter</span>
+	<nav>
+		<div class="nav-wrapper">
+			<div class='nav-item' id="settings-btn">
+				<div class="nav-item-wrapper">
+					<img src="./assets/settings.svg">	
+				</div>
+			</div>
+			<div class='nav-item' id="share-btn">
+				<div class="nav-item-wrapper">
+					<img src="./assets/settings.svg">	
+				</div>
+			</div>
+			<div class='nav-item' id="filter-btn">
+				<div class="nav-item-wrapper">
+					<img src="./assets/settings.svg">	
+				</div>
+			</div>
 		</div>
-	</header>
+	</nav>
 	<script>
-		var settingsMenu = false;
+		var settings = false;
+		var settingsMenu = $()
+		var settingsBtn = $('#settings-menu');
 		var shareMenu = false;
 		var filterMenu = false;
 		$('#settings-btn').on('click', function() {
 			if (settingsMenu) {
-				$('#settings-menu').css('margin-left', '-100%');
+				settingsBtn.css('margin-left', '-100%');
 			} else {
-				$('#share-menu').css('margin-left', '-100%');
+				.css('margin-left', '-100%');
 				$('#filter-menu').css('margin-left', '-100%');
 				$('#settings-menu').css('margin-left', '0%');
 				
@@ -225,12 +251,26 @@
 			}
 			filterMenu = !filterMenu;
 		});
+		function MenuToggler(name) {
+			this.visible = false;
+			this.menu = $(`#${name}-menu`);
+			this.btn = $(`#${name}-btn`);
+			this.btn.on('click', function() {
+
+			})
+		}
 	</script>
+	
+	<!-- <div style="position: fixed; top: 0px; left: 0px;">
+		<div style="border-radius: 4px; background-color: white; padding: 4px; margin: 10px; box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.1); cursor: pointer;">
+			<img style="width: 24px; height: 24px;" src="./assets/menu.svg">
+		</div>
+	</div> -->
 
 	<style>
 		div#my-location {
 			position: fixed;
-			top: 0px;
+			bottom: 0px;
 			right: 0px;
 			color: black;
 			display: block;
@@ -256,10 +296,13 @@
 	</div>
 	<script>
 		$('#my-location').on('click', function() {
-			// map.setZoom(10);
+			let zoom = map.getZoom();
+			if (zoom < 11) {
+				zoom = 11;
+			}
 			map.flyTo({
 				center: [ lng, lat ],
-				zoom: 11
+				zoom: zoom
 			});
 		});
 	</script>
