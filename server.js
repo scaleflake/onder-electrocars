@@ -8,8 +8,8 @@ var app = express();
 
 app.use('/', express.static(__dirname + '/'));
 
-app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/index.html');
+app.get(['/', '/home', '/main', '/map', '/gui'], function(req, res) {
+	res.sendFile(__dirname + '/gui/index.html');
 });
 
 app.get('/ip', function(req, res) {

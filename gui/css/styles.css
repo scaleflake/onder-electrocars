@@ -1,6 +1,61 @@
-body {
-	--parallax-background: ;
+body[theme=light] {
+	--color-1: rgb(255, 255, 255);
+	--color-2: rgb(240, 240, 240);
+	--color-3: rgb(210, 210, 210);
+	--color-4: rgb(190, 190, 190);
 
+	--main-bg-color: var(--color-1);
+	--main-font-color: rgb(50, 50, 50);
+	--main-link-color: rgb(0, 111, 255);
+
+	--shadow-color: rgba(0, 0, 0, 0.8);
+
+	--modules-header-color: var(--color-4);
+	--modules-bg-color: var(--color-2);
+	
+	--blocks-bg-color: var(--color-1);
+
+	--orders-bg-color: var(--color-1);
+
+	--accent-light: var(--color-3);
+	--accent-dark: var(--color-4);
+
+
+
+	--scrollbar-track-color: var(--color-3);
+	--scrollbar-thumb-color: var(--color-4);
+
+	--slider-track: rgb(170, 170, 170);
+	--slider-thumb: #F0F0F0;
+}
+
+body[theme=dark] {
+	--main-bg-color: rgb(30, 30, 30);
+	--main-font-color: white;
+	--main-link-color: #006FFF;
+
+	--shadow-color: rgba(0, 0, 0, 0.8);
+
+	--modules-bg-color: rgb(50, 50, 50);
+	--modules-header-color: rgb(70, 70, 70);
+
+	--blocks-bg-color: rgb(60, 60, 60);
+
+	--orders-bg-color: rgba(0, 0, 0, 0.2);
+
+	--accent-light: rgb(30, 30, 30);
+	--accent-dark: rgb(0, 90, 165);
+
+
+
+	--scrollbar-track-color: rgb(40, 40, 40);
+	--scrollbar-thumb-color: rgb(70, 70, 70);
+
+	--slider-track: rgb(40, 40, 40);
+	--slider-thumb: #c0c0c0;
+}
+
+body[theme=dark-alt] {
 	--main-bg-color: rgb(30, 33, 36);
 	--main-font-color: white;
 	--main-link-color: #006FFF;
@@ -26,33 +81,39 @@ body {
 	--slider-thumb: #c0c0c0;
 }
 
-input.form-control {	
-	/*background-color: var(--slider-track);
-	border-color: var(--main-bg-color);
-	color: var(--main-font-color);*/
+body {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	overflow: hidden;
+	background-color: indianred;
+	color: var(--main-font-color);
+	font-weight: 100;
 }
 
-body {
-	/*background-color: var(--main-bg-color);*/
-	background-color: indianred;
+input.form-control {	
+	background-color: var(--color-2);
+	border-color: var(--modules-header-color);
 	color: var(--main-font-color);
 }
 
-::-webkit-scrollbar {
+*::-webkit-scrollbar {
 	width: 8px;
 	height: 8px;
 }
-::-webkit-scrollbar-button {
+*::-webkit-scrollbar-button {
 	width: 0px;
 	height: 0px;
 	/*background-color: var(--scrollbar-thumb-color);*/
 }
-::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
 	background: var(--scrollbar-thumb-color);
 	border: 0px none #ffffff;
 	border-radius: 50vw;
 }
-::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
 	background: var(--scrollbar-track-color);
 	border: 0px none #ffffff;
 	border-radius: 50vw;
@@ -60,9 +121,10 @@ body {
 	/*padding: 5px;
 	margin: 5px;*/
 }
-::-webkit-scrollbar-corner {
+*::-webkit-scrollbar-corner {
 	background: var(--scrollbar-track-color);
 }
+
 
 input[type=range]::-moz-range-track {
 	width: 100%;
@@ -117,3 +179,10 @@ input[type=range]::-ms-thumb {
 input[type=range]:focus::-ms-fill-upper {
 	background: #d8dfe6;
 }*/
+
+
+div.horizontal-scroll {
+	overflow-x: scroll;
+	overflow-y: hidden; 
+	white-space: nowrap;
+}
