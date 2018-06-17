@@ -1,5 +1,19 @@
+/*jshint esversion: 6 */
 function horizontalScroll(element) {
-	let scroller = document.getElementById(element);
+	let scroller;
+	if (typeof(element) == 'string') {
+		if (element[0] == '#') {
+			scroller = $(element).get(0);
+		} else {
+			scroller = document.getElementById(element);
+		}
+	} else {
+		if (element.get) {
+			scroller = element.get(0);
+		} else {
+			scroller = element;
+		}
+	}
 	
 	function scrollHorizontally(e) {
 		e = window.event || e;

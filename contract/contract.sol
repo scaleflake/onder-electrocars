@@ -71,7 +71,7 @@ contract Charger {
 	// function changeAttr(string attr) public byOwner {
 		
 	// }
-	function getBalance() public forOwner constant returns(uint256) {
+	function getBalance() public forOwner view returns(uint256) {
 		return address(this).balance;
 	}
 
@@ -141,19 +141,19 @@ contract Charger {
 	
 
 	// Get info about charger
-	function getAllInformation() public constant returns(int128, int128, uint8, uint16, uint16, uint128, uint128, bool, bool, bool, bool, int16) {
+	function getAllInformation() public view returns(int128, int128, uint8, uint16, uint16, uint128, uint128, bool, bool, bool, bool, int16) {
 		return (lat, lng, level, connector, class, power, markup, confirmed, active, reserved, busy, rating);
 	}
 
-	function getLocation() public constant returns(int128, int128) {
+	function getLocation() public view returns(int128, int128) {
 		return (lat, lng);
 	}
 	
-	function getCharacteristics() public constant returns(uint8, uint16, uint16, uint128, uint128) {
+	function getCharacteristics() public view returns(uint8, uint16, uint16, uint128, uint128) {
 		return (level, connector, class, power, markup);
 	}  
 
-	function getState() public constant returns(bool, bool, bool, bool, int16) {
+	function getState() public view returns(bool, bool, bool, bool, int16) {
 		return (confirmed, active, reserved, busy, rating);   
 	}
 }
@@ -183,14 +183,14 @@ contract StandartFactory {
 		return chargerCount;
 	}
 
-	// function getNear(uint128 lat, uint128 lng, uint128 radius) public constant returns(address[]) {
+	function getNear(uint128 lat, uint128 lng, uint128 radius) public view returns(address[20]) {
 		
-	// }
+	}
 
-	function getChargerCount() public constant returns(uint) {
+	function getChargerCount() public view returns(uint) {
 		return chargerCount;
 	}
-	function getChargerById(uint id) public constant returns(address) {
+	function getChargerById(uint id) public view returns(address) {
 		return chargers[id];
 	}
 }

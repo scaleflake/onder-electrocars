@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+	<script>
+		/*jshint esversion: 6 */
+		function horizontalScroll(element) {
+			let scroller;
+			if (typeof(element) == 'string') {
+				if (element[0] == '#') {
+					scroller = $(element).get(0);
+				} else {
+					scroller = document.getElementById(element);
+				}
+			} else {
+				if (element.get) {
+					scroller = element.get(0);
+				} else {
+					scroller = element;
+				}
+			}
+			
+			function scrollHorizontally(e) {
+				e = window.event || e;
+				let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+				scroller.scrollLeft -= (delta * 40);
+				e.preventDefault();
+			}
+
+			if (scroller.addEventListener) {
+				// IE9, Chrome, Safari, Opera
+				scroller.addEventListener("mousewheel", scrollHorizontally, false);
+				// Firefox
+				scroller.addEventListener("DOMMouseScroll", scrollHorizontally, false); 
+			} else {
+				// IE 6/7/8
+				scroller.attachEvent("onmousewheel", scrollHorizontally); 
+			}
+		}
+	</script>
+</head>
+
+<!-- <TEMPLATOR style="display: none;" type="text/tmpl">
+
+<onder-fields type>
+	<form-group>
+		<label>Your ethereum address: </label>
+		<field class='editable'>0x0000000000000000000000000000000000000000</field>
+	</form-group>
+	<form-group>
+		<label>Your Onder sensor contract address: </label>
+		<field>0x1111111111111111111111111111111111111111</field>
+	</form-group>
+	<form-group>
+		<label>Your Onder sensor ID: </label>
+		<field>009343c</field>
+	</form-group>
+	<form-group>
+		<label>Your Onder-subnetowrk: </label>
+		<field style="color: orangered"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Phoenician_lamedh.svg/20px-Phoenician_lamedh.svg.png" alt="">lāmed</field>
+	</form-group>
+</onder-fields>
+<charger-types>
+	<style>
+		charger-types item {
+			overflow: hidden;
+			border-radius: 10px;
+			cursor: pointer;
+			display: inline-block;
+			margin-bottom: 5px;
+			transition: 0.3s;
+			background-color: var(--orders-bg-color);
+			border-style: solid;
+			border-width: 3px;
+			border-color: transparent;
+		}
+		charger-types item + item {
+			margin-left: 6px;
+		}
+		charger-types item:hover {
+			background-color: var(--accent-light);
+		}
+		charger-types item.ui-selected {
+			border-style: solid;
+			border-width: 3px;
+			border-color: #17a2b8;
+		}
+		charger-types item img {
+			height: 180px;
+		}
+		charger-types item div {
+			text-align: center;
+		}
+	</style>
+	<div class="horizontal-scroll" id="${ID}">
+		<item id="chademo">
+			<img src="./assets/chargers/chademo.png" alt="">
+			<div>CHAdeMO</div>
+		</item>
+		<item id="j1772">
+			<img src="./assets/chargers/j1772.png" alt="">
+			<div>J1772</div>
+		</item>
+		<item id="j1772-ccs">
+			<img src="./assets/chargers/j1772_ccs.png" alt="">
+			<div>J1772 CCS</div>
+		</item>
+		<item id="mennekes">
+			<img src="./assets/chargers/mennekes.png" alt="">
+			<div>Mennekes</div>
+		</item>
+		<item id="mennekes-ccs">
+			<img src="./assets/chargers/mennekes_ccs.png" alt="">
+			<div>Mennekes CCS</div>
+		</item>
+		<!-- <item style="width: 127.3px;">
+			<img src="./assets/chargers/tesla-hpwc-model-s.png" alt="" width="100%">
+			<div>Tesla Supercharger</div>
+		</item> -->
+	</div>
+	<script>
+		// $(function() { 
+		// 	horizontalScroll($("#${ID}"));
+		// 	$("#${ID}").selectable();
+		// });
+	</script>
+</charger-types>
+
+<script>
+	/*jshint esversion: 6 */
+	function template(name, args) {
+		let template = $(`TEMPLATOR ${name}`);
+		console.log(template.html());
+	}
+</script>
+</TEMPLATOR> -->
+
+<body>
+	<script>
+		function template(string, args) {
+			return eval('`' + string + '`');
+		}
+		var string = 'from coommon string:"${args[0]}" to template:"${args[1]}"';
+		var templ = template(string, ['sasatb', 'lezhatb']);
+		console.log(templ);
+	</script>
+</body>
+
+</html>

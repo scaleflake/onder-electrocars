@@ -1,15 +1,52 @@
 var express = require('express'),
-    https = require('https'),
-    http = require('http'),
-    fs = require('fs'),
-    public = require('public-ip');
+	path = require('path'),
+	https = require('https'),
+	http = require('http'),
+	fs = require('fs'),
+	public = require('public-ip');
 
 var app = express();
 
+// if (/*app.get('env') === 'development'*/ true) {
+// 	var livereload = require('easy-livereload');
+// 	var file_type_map = {
+// 		html: 'html',
+// 		jade: 'html',
+// 		styl: 'css',
+// 		scss: 'css',
+// 		sass: 'css',
+// 		less: 'css'
+// 	};
+
+// 	// store the generated regex of the object keys
+// 	var file_type_regex = new RegExp('\\.(' + Object.keys(file_type_map).join('|') + ')$');
+
+// 	app.use(livereload({
+// 		watchDirs: [
+// 			__dirname,
+// 			path.join(__dirname, 'gui'),
+// 			path.join(__dirname, 'gui/js'),
+// 			path.join(__dirname, 'gui/css')
+// 		],
+// 		checkFunc: function(file) {
+// 			console.log(file);
+// 			return /\.(css|js|html)$/.test(file);
+// 		},
+// 		renameFunc: function(file) {
+// 			console.log(file);
+// 			return file;
+// 		},
+// 		port: process.env.LIVERELOAD_PORT || 35729
+// 	}));
+// }
+
 app.use('/', express.static(__dirname + '/'));
 
-app.get(['/', '/home', '/main', '/map', '/gui'], function(req, res) {
-	res.sendFile(__dirname + '/gui/index.html');
+['/', '/home', '/main', '/gui'].forEach(function(e) {
+	app.use(e, express.static(__dirname + '/gui'));
+	app.get(e, function(req, res) {
+		res.sendFile(__dirname + '/gui/index.html');
+	});
 });
 
 app.get('/ip', function(req, res) {
@@ -31,16 +68,17 @@ app.get('/ip', function(req, res) {
 	}
 });
 
-var options = {
-	key: fs.readFileSync('encryption/key.pem'),
-	ca: fs.readFileSync('encryption/csr.pem'),
-	cert: fs.readFileSync('encryption/cert.pem')
-};
+
 
 var http = require('http');
-var https = require('https');
-
 http.createServer(app).listen(20080);
-https.createServer(options, app).listen(20443);
+
+// var https = require('https');
+// var options = {
+// 	key: fs.readFileSync('encryption/key.pem'),
+// 	ca: fs.readFileSync('encryption/csr.pem'),
+// 	cert: fs.readFileSync('encryption/cert.pem')
+// };
+// https.createServer(options, app).listen(20443);
 
 console.log('Server started');
