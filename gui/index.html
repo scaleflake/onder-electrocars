@@ -96,7 +96,7 @@
 		overflow: hidden;
 		width: 100%;
 		text-align: center;
-	}*/
+	}
 </style>
 <body theme="light">
 	<!-- <home>
@@ -436,17 +436,25 @@
 								<script>
 									/*jshint esversion: 6 */
 									let block = $('block#block-scroll');
+									let geodata;
+
 
 									let country = $('#country-picker input');
 									let countries = $('#countries');
-									$.getJSON('./countries.json', function(data) {
-										data.forEach(function(e) {
+
+									let city = $('#city-picker input');
+									let cities = $('#cities');
+
+									$.getJSON('./cities.json', function(data) {
+										geodata = data;
+
+										for (let e in geodata) {
 											let item = $(`<item>${e}</item>`);
 											countries.append(item);
 											item.on('mouseover', function() {
-												country.val(e);
+												country.val(e).trigger('change');
 											});
-										});
+										}
 									});
 									country.on("focus", function() {
 										setTimeout(function() {
@@ -455,7 +463,7 @@
 										    }, 300);
 										}, 300);
 									});
-									country.on('input', function() {
+									country.on("input", function() {
 										$('#countries item').each(function(i) {
 											let self = $(this);
 
@@ -469,25 +477,38 @@
 											}
 										});
 									});
+									country.on('change', function() {
+										console.log('aaasss');
+										cities.html('');
+										for (let e in geodata[country.val()]) {
+											let item = $(`<item>${e}</item>`);
+											cities.append(item);
+											item.on('mouseover', function() {
+												city.val(e).trigger('change');
+											});
+										}
+									});									
 									
-
-									let city = $('#city-picker input');
-									let cities = $('#cities');
-									// $.getJSON('./cities.json', function(data) {
-									// 	data.forEach(function(e) {
-									// 		let item = $(`<item>${e}</item>`);
-									// 		countries.append(item);
-									// 		item.on('mouseover', function() {
-									// 			input.val(e);
-									// 		});
-									// 	});
-									// });
 									city.on("focus", function() {
 										setTimeout(function() {
 										    block.animate({
 										        scrollTop:  block.scrollTop() + city.offset().top - 10
 										    }, 300);
 									    }, 300);
+									});
+									city.on('input', function() {
+										$('#cities item').each(function(i) {
+											let self = $(this);
+
+											let str = self.html().toLowerCase();
+											let substr = city.val().toLowerCase();
+
+											if (str.includes(substr)) {
+												$(this).css('display', 'block');
+											} else {
+												$(this).css('display', 'none');
+											}
+										});
 									});
 								</script>
 							</form-group>
