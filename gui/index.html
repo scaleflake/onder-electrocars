@@ -49,13 +49,17 @@
 	charger-types row > item {
 		padding: 0px 4px 0px 4px;
 		display: inline-block;
-		width: calc(100% / 4);
+		width: calc(100% / 5);
 		
 	}
 	charger-types row > item > img {
 		background-color: var(--orders-bg-color);
 		border-radius: 10px;
 		width: 100%;
+
+		cursor: pointer;
+		border: 2px solid;
+		border-color: transparent;
 	}
 	charger-types row > item:hover img {
 		background-color: var(--accent-light);
@@ -196,6 +200,44 @@
 	</home> -->
 
 	<alert>
+		<style>
+			div#alert {
+				display: block;
+
+				position: absolute;
+				right: 0;
+				bottom: 0;
+			    top: 30%;
+			    left: 50%;
+			    transform: translateY(-50%) translateX(-50%);
+
+				width: 100%;
+				max-width: 300px;
+				max-height: 100px;
+
+				z-index: 30;
+				background-color: white;
+				border-radius: 20px;
+
+				display: none;
+			}
+
+			div#alert > span#message {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+			    top: 50%;
+			    left: 50%;
+			    transform: translateY(-50%) translateX(-50%);
+				width: 100%;
+				height: 100%;
+			    z-index: 40;
+			}
+		</style>
+		<div id="alert">
+			<div id="message">Message</div>
+		</div>
+		<script></script>
 	</alert>
 
 	<setup>
@@ -310,11 +352,11 @@
 							</form-group>
 							<form-group>
 								<button class="btn" id="1-setup" style="width: 100%;">I'm newcomer</button>
-								<div style="margin-top: 5px">Description: blah-blah-blah-1</div>
+								<div style="margin-top: 5px">Initial setup.</div>
 							</form-group>
 							<form-group>
 								<button class="btn" id="1-export" style="width: 100%;">I'm user</button>
-								<div style="margin-top: 5px">Description: blah-blah-blah-2</div>
+								<div style="margin-top: 5px">Transfer settings from another device or browser.</div>
 							</form-group>
 						</content>
 
@@ -478,7 +520,6 @@
 										});
 									});
 									country.on('change', function() {
-										console.log('aaasss');
 										cities.html('');
 										for (let e in geodata[country.val()]) {
 											let item = $(`<item>${e}</item>`);
@@ -536,23 +577,44 @@
 										 --><item id="mennekes">
 												<img src="./assets/chargers/mennekes.png" alt="">
 												<div>Mennekes</div>
-											</item>	
+											</item><!--
+										 --><item id="mennekes-ccs">
+												<img src="./assets/chargers/mennekes_ccs.png" alt="">
+												<div>Mennekes CCS</div>
+											</item>
 										</row>
-										<row>
+										<!-- <row>
 											<item id="mennekes-ccs">
 												<img src="./assets/chargers/mennekes_ccs.png" alt="">
 												<div>Mennekes CCS</div>
-											</item><!-- 
-											
-										 --><item>
-												<!-- <item style="width: 127.3px;">
+											</item><item style="width: 127.3px;">
 													<img src="./assets/chargers/tesla-hpwc-model-s.png" alt="" width="100%">
 													<div>Tesla Supercharger</div>
-												</item> -->
 											</item>
-										</row>
+										</row> -->
 									</div>
 								</charger-types>
+								<script>
+									/*jshint esversion: 6 */
+									let active = [ false, false, false, false, false ];
+									[
+									    $('item#chademo img'),
+									    $('item#j1772 img'),
+									    $('item#j1772-ccs img'),
+									    $('item#mennekes img'),
+									    $('item#mennekes-ccs img'),
+									].forEach((e, i) => {
+										e.on('click', function() {
+											if (active[i]) {
+												e.css('border-color', 'transparent');
+												active[i] = false;
+											} else {
+												e.css('border-color', 'royalblue');
+												active[i] = true;
+											}
+										});
+									});
+								</script>
 							</form-group>
 
 							<form-group>
@@ -596,7 +658,16 @@
 			});
 			$_done.on('click', function() {
 				let $_wrapper = $('#setup');
-				$_wrapper.css('transform', 'translateY(-100%)');
+				let oneChargerPicked = false;
+				for (let i = 0; i < active.length; i++) {
+					if (active[i]) oneChargerPicked = true;
+				}
+				if (oneChargerPicked && country.val() && city.val()) {
+					$_wrapper.css('transform', 'translateY(-100%)');
+				} else {
+					alert("Please fill in all fields");
+				}
+				
 			});
 		</script>
 	</setup>
@@ -825,15 +896,16 @@
 				border: 0px none #ffffff;
 			}
 
-			div#menu > section {
+			div#menu section {
 				display: block;
 				overflow: visible;
 			}
-			div#menu > section + section {
-				margin-top: 15px;
+			div#menu section + section {
+				margin-top: 35px;
 			}
-			div#menu > section > header {
+			div#menu section > header {
 				background-color: var(--modules-header-color);
+				color: white;
 				border-radius: 10px;
 				display: block;
 				font-size: 18px;
@@ -841,12 +913,12 @@
 				padding: 5px 10px;
 				text-align: center;
 			}
-			div#menu > section > content {
+			/*div#menu section > content {
 				background-color: var(--modules-bg-color);
 				border-radius: 10px;
 				display: block;
 				padding: 10px;
-			}
+			}*/
 			div#menu label {
 				font-size: 14px;
 			}
@@ -860,6 +932,194 @@
 				<i-2>
 					<section style="text-align: center; padding-top: 5px; font-size: 28px;">
 						<font style="font-family: sans-serif;">Ø</font>‎NDER + EVs
+					</section>
+					<section style="margin-top: 15px;">
+						<header>Settings</header>
+						<content>
+							<form-group>
+								<div id="power-types">
+									<div style="display: inline-block; width: 50%; padding: 0px 4px 0px 4px;"><button class="btn" style="width: 100%;">Import</button></div><!-- 
+								 --><div style="display: inline-block; width: 50%; padding: 0px 4px 0px 4px;"><button class="btn" style="width: 100%;">Export</button></div>
+								</div>
+							</form-group>
+							<form-group>
+								<label>Your ethereum address: </label>
+								<field class='editable'>0x0000000000000000000000000000000000000000</field>
+							</form-group>
+							<form-group>
+								<label>Your Onder sensor contract address: </label>
+								<field>0x1111111111111111111111111111111111111111</field>
+							</form-group>
+							<form-group>
+								<label>Your Onder sensor ID: </label>
+								<field>009343c</field>
+							</form-group>
+							<form-group>
+								<label>Your Onder-subnetowrk: </label>
+								<field style="color: orangered"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Phoenician_lamedh.svg/20px-Phoenician_lamedh.svg.png" alt="">lāmed</field>
+							</form-group>
+							<form-group>
+								<label>Country: </label>
+								<picker id="country-picker">
+									<input class="form-control" type="text">
+									<div>
+										<div id="countries">
+
+										</div>
+									</div>
+								</picker>
+							</form-group>		
+							<form-group>	
+								<label>City: </label>
+								<picker id="city-picker">
+									<input class="form-control picker" type="text">
+									<div>
+										<div id="cities">
+											
+										</div>
+									</div>
+								</picker>
+								<script>
+									/*jshint esversion: 6 */
+									let block = $('block#block-scroll');
+									let geodata;
+
+
+									let country = $('#country-picker input');
+									let countries = $('#countries');
+
+									let city = $('#city-picker input');
+									let cities = $('#cities');
+
+									$.getJSON('./cities.json', function(data) {
+										geodata = data;
+
+										for (let e in geodata) {
+											let item = $(`<item>${e}</item>`);
+											countries.append(item);
+											item.on('mouseover', function() {
+												country.val(e).trigger('change');
+											});
+										}
+									});
+									country.on("focus", function() {
+										setTimeout(function() {
+											block.animate({
+										        scrollTop: block.scrollTop() + country.offset().top - 10
+										    }, 300);
+										}, 300);
+									});
+									country.on("input", function() {
+										$('#countries item').each(function(i) {
+											let self = $(this);
+
+											let str = self.html().toLowerCase();
+											let substr = country.val().toLowerCase();
+
+											if (str.includes(substr)) {
+												$(this).css('display', 'block');
+											} else {
+												$(this).css('display', 'none');
+											}
+										});
+									});
+									country.on('change', function() {
+										cities.html('');
+										for (let e in geodata[country.val()]) {
+											let item = $(`<item>${e}</item>`);
+											cities.append(item);
+											item.on('mouseover', function() {
+												city.val(e).trigger('change');
+											});
+										}
+									});									
+									
+									city.on("focus", function() {
+										setTimeout(function() {
+										    block.animate({
+										        scrollTop:  block.scrollTop() + city.offset().top - 10
+										    }, 300);
+									    }, 300);
+									});
+									city.on('input', function() {
+										$('#cities item').each(function(i) {
+											let self = $(this);
+
+											let str = self.html().toLowerCase();
+											let substr = city.val().toLowerCase();
+
+											if (str.includes(substr)) {
+												$(this).css('display', 'block');
+											} else {
+												$(this).css('display', 'none');
+											}
+										});
+									});
+								</script>
+							</form-group>
+							<form-group>
+								<charger-types>
+									<label>Charger connector type: </label>
+									<div id="charges">
+										<row>
+											<item id="chademo">
+												<img src="./assets/chargers/chademo.png" alt="">
+												<div>CHAdeMO</div>
+											</item><!-- 
+
+										 --><item id="j1772">
+												<img src="./assets/chargers/j1772.png" alt="">
+												<div>J1772</div>
+											</item><!-- 
+
+										 --><item id="j1772-ccs">
+												<img src="./assets/chargers/j1772_ccs.png" alt="">
+												<div>J1772 CCS</div>
+											</item><!-- 
+
+										 --><item id="mennekes">
+												<img src="./assets/chargers/mennekes.png" alt="">
+												<div>Mennekes</div>
+											</item><!--
+										 --><item id="mennekes-ccs">
+												<img src="./assets/chargers/mennekes_ccs.png" alt="">
+												<div>Mennekes CCS</div>
+											</item>
+										</row>
+										<!-- <row>
+											<item id="mennekes-ccs">
+												<img src="./assets/chargers/mennekes_ccs.png" alt="">
+												<div>Mennekes CCS</div>
+											</item><item style="width: 127.3px;">
+													<img src="./assets/chargers/tesla-hpwc-model-s.png" alt="" width="100%">
+													<div>Tesla Supercharger</div>
+											</item>
+										</row> -->
+									</div>
+								</charger-types>
+								<script>
+									/*jshint esversion: 6 */
+									let active = [ false, false, false, false, false ];
+									[
+									    $('item#chademo img'),
+									    $('item#j1772 img'),
+									    $('item#j1772-ccs img'),
+									    $('item#mennekes img'),
+									    $('item#mennekes-ccs img'),
+									].forEach((e, i) => {
+										e.on('click', function() {
+											if (active[i]) {
+												e.css('border-color', 'transparent');
+												active[i] = false;
+											} else {
+												e.css('border-color', 'royalblue');
+												active[i] = true;
+											}
+										});
+									});
+								</script>
+							</form-group>
+						</content>
 					</section>
 					<section>
 						<header>Customize</header>
@@ -963,21 +1223,21 @@
 										 --><item id="mennekes">
 												<img src="./assets/chargers/mennekes.png" alt="">
 												<div>Mennekes</div>
-											</item>	
+											</item><!--
+										 --><item id="mennekes-ccs">
+												<img src="./assets/chargers/mennekes_ccs.png" alt="">
+												<div>Mennekes CCS</div>
+											</item>
 										</row>
-										<row>
+										<!-- <row>
 											<item id="mennekes-ccs">
 												<img src="./assets/chargers/mennekes_ccs.png" alt="">
 												<div>Mennekes CCS</div>
-											</item><!-- 
-											
-										 --><item>
-												<!-- <item style="width: 127.3px;">
+											</item><item style="width: 127.3px;">
 													<img src="./assets/chargers/tesla-hpwc-model-s.png" alt="" width="100%">
 													<div>Tesla Supercharger</div>
-												</item> -->
 											</item>
-										</row>
+										</row> -->
 									</div>
 								</charger-types>
 							</form-group>
